@@ -32,7 +32,29 @@ def returnAll():
 def returnOne(name):
     langs = [language for language in languages if language['name'] == name]
     return jsonify({"languages": langs[0]})
-    
+
+@app.route("/lang/", methods = ['POST'])
+@auth.login_required
+
+def addOne():
+    language = {"name": request.json['name']}
+    languages.append(language)
+    return jsonify({"languages": languages})
+
+@app.route("/lang/<string:name>",methods = ['PUT'])
+@auth.login_required
+def editOne(name):
+    langs = [language for language in languages if language['name'] == name]
+    langs[0]['name'] = request.json['name']
+    return jsonify({'languages': langs[0]})
+
+@app.route("/lang/<string:name>", methods = ['DELETE'])
+@app.login_required
+def deleteOne(name):
+    langs = [language for language in languages if language['name'] == name]
+    languages.remove(langs[0])
+    return jsonify({'langages' : languages})
+
 if __name__ == '__main__':
     app.debug = True
     app.run(host = '0.0.0.0', port = 8080)
